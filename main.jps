@@ -122,13 +122,27 @@ actions:
     - log: make nginx serve grafana over proxypass
     - if ('${settings.ssl}' === 'false'):
       - cmd[cp]: |-
-          sed -i '74d' /etc/nginx/nginx.conf
-          sed -i "74i proxy_pass http://localhost:3000/;"  /etc/nginx/nginx.conf
-          sed -i "72i location /prometheus {"  /etc/nginx/nginx.conf
-          sed -i "73i    auth_basic "Prometheus";"  /etc/nginx/nginx.conf
-          sed -i "74i    auth_basic_user_file /etc/prometheus/.htpasswd;"  /etc/nginx/nginx.conf
-          sed -i "75i    proxy_pass http://localhost:9090/prometheus;"  /etc/nginx/nginx.conf
-          sed -i "76i   }"  /etc/nginx/nginx.conf
+          > /etc/nginx/conf.d/sites-enabled/default.conf
+          printf "location / {
+              proxy_pass http://localhost:3000/;
+              }
+          index  index.php index.html index.htm;
+          #error_page  404              /404.html;
+          # redirect server error pages to the static page /50x.html
+          #
+          error_page   500 502 503 504  /50x.html;
+          location = /50x.html {
+              root   html;
+          }
+          location ~ ^/\.well-known { root /var/www/webroot/ROOT;  allow all;}
+          location ~ /\.well-known { root /var/www/webroot;  allow all;}
+          location ~ /\. { deny all; access_log off; log_not_found off; }
+          location /prometheus {
+          auth_basic "Prometheus";
+          auth_basic_user_file /etc/prometheus/.htpasswd;
+          proxy_pass http://localhost:9090/prometheus;
+          }" >> /etc/nginx/conf.d/sites-enabled/default.conf
+          
         user: root
     - else:
       - cmd[cp]: |-
