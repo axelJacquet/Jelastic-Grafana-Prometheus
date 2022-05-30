@@ -125,7 +125,7 @@ actions:
       - cmd[cp]: |-
           > /etc/nginx/conf.d/sites-enabled/default.conf
           printf "location / {
-              proxy_set_header Host $http_host;
+              proxy_set_header Host \$http_host;
               proxy_pass http://localhost:3000/;
               }
           index  index.php index.html index.htm;
@@ -150,7 +150,7 @@ actions:
       - cmd[cp]: |-
           > /etc/nginx/conf.d/sites-enabled/default.conf
           printf "location / {
-              proxy_set_header Host $http_host;
+              proxy_set_header Host \$http_host;
               proxy_pass http://localhost:3000/;
               }
           index  index.php index.html index.htm;
@@ -191,7 +191,7 @@ addons:
           skipEmail: true
   - id: update-prometheus
     name: Update Prometheus Server
-    logo: https://raw.githubusercontent.com/Aureliolo/Jelastic-Grafana-Prometheus/main/images/prometheus_logo.png
+    logo: https://raw.githubusercontent.com/axelJacquet/Jelastic-Grafana-Prometheus/main/images/prometheus_logo.png
     description: Update of Prometheus
     buttons:
       - caption: Update
