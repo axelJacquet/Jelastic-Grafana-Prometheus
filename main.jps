@@ -169,6 +169,7 @@ actions:
           auth_basic_user_file /etc/prometheus/.htpasswd;
           proxy_pass http://localhost:9090/prometheus;
           }" >> /etc/nginx/conf.d/sites-enabled/default.conf
+          sed -r --in-place '/[::]/d' /etc/nginx/conf.d/ssl.conf
           
         user: root
     - api [cp]: jelastic.environment.control.RestartNodes 
